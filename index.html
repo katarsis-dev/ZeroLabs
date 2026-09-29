@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cpath fill=%22none%22 stroke=%22%23F2F2F2%22 stroke-width=%224%22 d=%22M15 12h35l-4 40H11z%22/%3E%3Cpath stroke=%22%23E8FF00%22 stroke-width=%224%22 d=%22m22 47 18-34%22/%3E%3C/svg%3E">
+<style>
+body.zl-loading > x-dc,body.zl-loading > #dc-root{visibility:hidden}
+#zl-loader{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;overflow:hidden;background:#0F0F0F;color:#F2F2F2;font-family:'JetBrains Mono',monospace;background-image:linear-gradient(rgba(242,242,242,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(242,242,242,.035) 1px,transparent 1px),radial-gradient(ellipse at 50% 45%,rgba(232,255,0,.075),transparent 48%);background-size:36px 36px,36px 36px,100% 100%;animation:zl-loader-grid 18s linear infinite}
+#zl-loader:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 12%,rgba(0,0,0,.62) 100%);pointer-events:none;z-index:2}
+#zl-loader:after{content:"";position:absolute;inset:-45% -20%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent 45%,rgba(232,255,0,.14) 49.7%,rgba(232,255,0,.035) 51%,transparent 56%);transform:translateY(-42%);animation:zl-loader-scan 3.4s cubic-bezier(.4,0,.6,1) infinite}
+.zl-loader__orbit{position:absolute;z-index:1;width:min(82vw,760px);aspect-ratio:1;border:1px solid rgba(232,255,0,.13);border-radius:50%;animation:zl-loader-orbit 18s linear infinite;box-shadow:0 0 80px rgba(232,255,0,.04),inset 0 0 80px rgba(232,255,0,.025)}
+.zl-loader__orbit:before,.zl-loader__orbit:after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.zl-loader__orbit:before{inset:9%;border:1px dashed rgba(242,242,242,.12);animation:zl-loader-orbit-reverse 34s linear infinite}
+.zl-loader__orbit:after{inset:24%;border:1px solid rgba(232,255,0,.12);box-shadow:0 0 0 28px rgba(232,255,0,.018),0 0 0 72px rgba(242,242,242,.018)}
+.zl-loader__orbit span{position:absolute;top:50%;left:-4px;width:8px;height:8px;background:#E8FF00;box-shadow:0 0 18px #E8FF00}
+.zl-loader__panel{position:relative;z-index:4;width:min(520px,calc(100vw - 48px));padding:24px;border:1px solid #333;background:rgba(15,15,15,.82);backdrop-filter:blur(10px);box-shadow:0 24px 90px rgba(0,0,0,.55);opacity:0;transform:translateY(24px) scale(.97);clip-path:inset(0 0 100% 0);animation:zl-loader-panel-in .85s cubic-bezier(.2,.8,.2,1) .12s forwards}
+.zl-loader__top,.zl-loader__meta{display:flex;align-items:center;justify-content:space-between;gap:14px;color:#8C8C8C;font-size:9px;letter-spacing:.16em}
+.zl-loader__brand{display:flex;align-items:center;gap:10px;color:#F2F2F2}
+.zl-loader__mark{width:20px;height:20px;border:2px solid #F2F2F2;position:relative;transform:skew(-8deg)}
+.zl-loader__mark:before{content:"";position:absolute;width:2px;height:25px;left:8px;top:-4px;background:#E8FF00;transform:rotate(42deg)}
+.zl-loader__status{margin-top:38px;color:#E8FF00;font-size:10px;letter-spacing:.2em;min-height:1.4em;text-shadow:0 0 18px rgba(232,255,0,.34)}
+.zl-loader__title{margin:8px 0 18px;font-family:'Anton',sans-serif;font-style:italic;font-size:clamp(64px,14vw,112px);line-height:.78;letter-spacing:.01em;text-transform:uppercase;animation:zl-loader-title-in .7s cubic-bezier(.16,1,.3,1) .38s both}
+.zl-loader__title em{color:#E8FF00;font-style:inherit}
+.zl-loader__sub{display:flex;align-items:center;gap:8px;color:#B5B5B5;font-size:10px;letter-spacing:.12em}
+.zl-loader__dot{width:6px;height:6px;background:#E8FF00;box-shadow:0 0 14px #E8FF00;animation:zl-loader-pulse .8s steps(2,end) infinite}
+.zl-loader__track{height:3px;margin:26px 0 10px;background:#2E2E2E;overflow:hidden}
+.zl-loader__fill{width:100%;height:100%;background:#E8FF00;transform:scaleX(0);transform-origin:left;box-shadow:0 0 16px rgba(232,255,0,.85);animation:zl-loader-progress 5s cubic-bezier(.65,0,.35,1) forwards}
+.zl-loader__meta{font-size:8px}
+.zl-loader__corner{position:absolute;width:12px;height:12px;border-color:#E8FF00;border-style:solid;opacity:.9}
+.zl-loader__corner--tl{top:-1px;left:-1px;border-width:2px 0 0 2px}.zl-loader__corner--tr{top:-1px;right:-1px;border-width:2px 2px 0 0}.zl-loader__corner--bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px}.zl-loader__corner--br{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+body.zl-ready #zl-loader{pointer-events:none;animation:zl-loader-exit .9s cubic-bezier(.72,0,.16,1) forwards}
+body.zl-ready > x-dc,body.zl-ready > #dc-root{visibility:visible;animation:zl-site-enter .62s cubic-bezier(.2,.8,.2,1) both}
+@keyframes zl-loader-grid{to{background-position:144px 72px,-72px 144px,0 0}}
+@keyframes zl-loader-scan{0%{transform:translateY(-42%)}55%,100%{transform:translateY(42%)}}
+@keyframes zl-loader-orbit{to{transform:rotate(360deg)}}
+@keyframes zl-loader-orbit-reverse{to{transform:rotate(-360deg)}}
+@keyframes zl-loader-panel-in{0%{opacity:0;transform:translateY(24px) scale(.97);clip-path:inset(0 0 100% 0)}65%{opacity:1;transform:translateY(-3px) scale(1);clip-path:inset(0)}100%{opacity:1;transform:none;clip-path:inset(0)}}
+@keyframes zl-loader-title-in{from{opacity:0;transform:translateX(-26px);clip-path:inset(0 100% 0 0)}to{opacity:1;transform:none;clip-path:inset(0)}}
+@keyframes zl-loader-progress{0%{transform:scaleX(0)}35%{transform:scaleX(.28)}52%{transform:scaleX(.56)}78%{transform:scaleX(.78)}100%{transform:scaleX(1)}}
+@keyframes zl-loader-pulse{50%{opacity:.35}}
+@keyframes zl-loader-exit{0%{transform:translateY(0);box-shadow:0 0 0 #E8FF00}68%{transform:translateY(-78%);box-shadow:0 8px 0 #E8FF00,0 16px 36px rgba(232,255,0,.22)}100%{transform:translateY(-110%);box-shadow:0 8px 0 #E8FF00,0 16px 36px rgba(232,255,0,.22)}}
+@keyframes zl-site-enter{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#zl-loader,.zl-loader__orbit,.zl-loader__orbit:before,.zl-loader__panel,.zl-loader__title,.zl-loader__fill,.zl-loader__dot{animation-duration:.01ms!important;animation-iteration-count:1!important}body.zl-ready #zl-loader{animation-duration:.18s!important}body.zl-ready > x-dc,body.zl-ready > #dc-root{animation-duration:.18s!important}}
+</style>
+<script>
+(() => {
+  let introStarted = false, introComplete = false, siteReady = false, exiting = false, reduced = false;
+  const reveal = () => {
+    if (!introComplete || !siteReady || exiting || !document.body) return;
+    exiting = true;
+    document.body.classList.add('zl-ready');
+    const loader = document.getElementById('zl-loader');
+    if (loader) window.setTimeout(() => loader.remove(), reduced ? 280 : 1020);
+  };
+  window.__zlRevealSite = () => {
+    siteReady = true;
+    reveal();
+  };
+  window.__zlStartIntro = () => {
+    if (introStarted) return;
+    introStarted = true;
+    reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const stages = [[650, 'CALIBRATING INTERFACE'], [1450, 'LOADING THE STUDIO'], [2350, 'LOADING THE SHELF'], [4300, 'SYSTEM READY // DEPLOYING']];
+      const status = document.getElementById('zl-loader-status');
+      stages.forEach(([at, label]) => window.setTimeout(() => { if (status && !document.body.classList.contains('zl-ready')) status.textContent = label; }, at));
+      window.setTimeout(() => { introComplete = true; reveal(); }, 5000);
+      window.setTimeout(() => { introComplete = true; siteReady = true; reveal(); }, 10000);
+    }));
+  };
+})();
+</script>
+<script src="./support.js"></script>
+</head>
+<body class="zl-loading">
+<div id="zl-loader" role="status" aria-label="Loading ZeroLabs">
+  <div class="zl-loader__orbit" aria-hidden="true"><span></span></div>
+  <div class="zl-loader__panel">
+    <i class="zl-loader__corner zl-loader__corner--tl"></i><i class="zl-loader__corner zl-loader__corner--tr"></i><i class="zl-loader__corner zl-loader__corner--bl"></i><i class="zl-loader__corner zl-loader__corner--br"></i>
+    <div class="zl-loader__top"><span class="zl-loader__brand"><span class="zl-loader__mark" aria-hidden="true"></span>ZERO LABS</span><span>BOOT SEQUENCE // 001</span></div>
+    <div id="zl-loader-status" class="zl-loader__status">INITIALIZING DIGITAL STUDIO</div>
+    <div class="zl-loader__title">ZERO<br><em>LABS</em></div>
+    <div class="zl-loader__sub"><span class="zl-loader__dot"></span>SYNCING THE STUDIO <span style="color:#555">/</span> THE SHELF</div>
+    <div class="zl-loader__track"><div class="zl-loader__fill"></div></div>
+    <div class="zl-loader__meta"><span>CREATIVE SYSTEMS ONLINE</span><span>PLEASE WAIT</span></div>
+  </div>
+</div>
+<script>if (window.__zlStartIntro) window.__zlStartIntro();</script>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZeroLabs | Digital Services &amp; Finished Products</title>
+<meta name="description" content="ZeroLabs offers app and web development, UI/UX, design, and automation services, plus finished templates, tools, design assets, and software.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ZeroLabs">
+<meta property="og:title" content="ZeroLabs | Digital Services &amp; Finished Products">
+<meta property="og:description" content="ZeroLabs offers app and web development, UI/UX, design, and automation services, plus finished templates, tools, design assets, and software.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ZeroLabs | Digital Services &amp; Finished Products">
+<meta name="twitter:description" content="ZeroLabs offers app and web development, UI/UX, design, and automation services, plus finished templates, tools, design assets, and software.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "ZeroLabs",
+  "description": "ZeroLabs offers app and web development, UI/UX, design, and automation services, plus finished digital products.",
+  "email": "andrianow817@gmail.com",
+  "sameAs": [
+    "https://www.instagram.com/katarsis_projects/",
+    "https://www.tiktok.com/@rian_wjy1"
+  ]
+}
+</script>
+<style>
+:root{--pad:20px;--cols:minmax(0,1fr);--board-h:476px;--tile-w:150px;--tile-h:184px;--glyph:52px;--prev:repeat(1,minmax(0,1fr));--main-h:auto}
+@media (min-width:980px){:root{--pad:44px;--cols:minmax(320px,0.8fr) minmax(0,1.2fr);--board-h:calc(100vh - 280px);--tile-w:196px;--tile-h:236px;--glyph:72px;--prev:repeat(3,minmax(0,1fr));--main-h:100vh}}
+*{box-sizing:border-box}
+html,body{margin:0;background:#0F0F0F;color:#F2F2F2;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#F2F2F2;text-decoration:none}
+a:hover{color:#E8FF00}
+button:focus-visible,[role="button"]:focus-visible{outline:2px solid #E8FF00;outline-offset:3px}
+button,input{font-family:inherit}
+::selection{background:#E8FF00;color:#0F0F0F}
+input::placeholder{color:#6E6E6E}
+@keyframes zl-pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(3);opacity:0}}
+@keyframes zl-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;min-height:var(--main-h);display:grid;grid-template-columns:var(--cols);gap:28px 40px;padding:24px var(--pad);max-width:1480px;margin:0 auto">
+
+  <div style="display:flex;flex-direction:column;justify-content:space-between;gap:36px;min-width:0;padding:8px 0">
+    <div data-in="1" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <svg ref="{{ markRef }}" width="34" height="34" viewBox="0 0 32 32" aria-label="ZeroLabs" style="display:block;transition:transform 400ms cubic-bezier(.2,.8,.2,1)"><path d="M2.5 2.5H21.5L29.5 10.5V29.5H2.5Z" fill="none" stroke="#F2F2F2" stroke-width="3"></path><path d="M9.5 22.5L22.5 9.5" stroke="#F2F2F2" stroke-width="3" stroke-linecap="square"></path><path d="M24 0H32V8Z" fill="#E8FF00"></path></svg>
+      <span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;color:#C4C4C4"><span style="position:relative;width:8px;height:8px"><span style="position:absolute;inset:0;background:#E8FF00"></span><span style="position:absolute;inset:0;background:#E8FF00;animation:zl-pulse 1.6s ease-out infinite"></span></span>NOT LAUNCHED YET</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <h1 data-in="1" style="margin:0;font-family:'Anton',sans-serif;font-style:italic;font-weight:400;text-transform:uppercase;font-size:clamp(56px,7vw,96px);line-height:0.88;letter-spacing:0.01em;padding-right:0.1em">Zero<br>Labs</h1>
+      <div data-in="1" style="display:flex;flex-direction:column;gap:4px;font-size:clamp(20px,2vw,26px);font-weight:700;line-height:1.25">
+        <span>Digital services &amp; products.</span>
+        <span style="color:#8C8C8C">Coming soon<span style="color:#E8FF00;animation:zl-blink 1.1s steps(1) infinite">_</span></span>
+      </div>
+      <p data-in="1" style="margin:0;font-size:15px;line-height:1.6;color:#B5B5B5;max-width:360px">Apps, websites, UI/UX, design, and automation—plus finished digital products ready to use.</p>
+
+      <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+        <form ref="{{ formRef }}" onSubmit="{{ submit }}" novalidate="" data-in="1" style="display:flex;flex-direction:column;gap:8px;max-width:420px">
+          <div style="display:flex;border:1px solid {{ inputBd }};background:#161616;transition:border-color 150ms" style-focus-within="border-color:#E8FF00">
+            <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="you@email.com" aria-label="Email" autocomplete="email" style="flex:1;min-width:0;height:50px;padding:0 14px;background:transparent;border:none;color:#F2F2F2;font-size:15px;outline:none">
+            <button type="submit" disabled="{{ busy }}" style="flex:none;height:50px;padding:0 18px;border:none;background:#E8FF00;color:#0F0F0F;font-size:14px;font-weight:800;cursor:pointer;opacity:{{ btnOp }};transition:transform 220ms cubic-bezier(.34,1.8,.64,1),filter 150ms" style-hover="filter:brightness(1.08)" style-active="transform:scale(0.95);transition:transform 90ms ease-out">{{ btnLabel }}</button>
+          </div>
+          <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="font-size:13px;color:#FF5A4E">{{ err }}</span></sc-if>
+          <sc-if value="{{ noErr }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:#8C8C8C">One email when we launch. Nothing else.</span></sc-if>
+        </form>
+      </sc-if>
+      <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+        <div data-done="1" style="display:flex;align-items:center;gap:14px;max-width:420px;padding:14px 16px;background:#161616;border:1px solid #262626">
+          <span style="width:30px;height:30px;flex:none;background:#E8FF00;color:#0F0F0F;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+          <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14.5px;font-weight:700">You're on the list.</span><span style="font-size:12.5px;color:#9A9A9A;word-break:break-all">We'll email {{ email }} at launch.</span></span>
+          <button onClick="{{ reset }}" style="flex:none;border:none;background:none;color:#9A9A9A;font-size:12px;cursor:pointer;text-decoration:underline;min-height:32px" style-hover="color:#F2F2F2">Change</button>
+        </div>
+      </sc-if>
+    </div>
+
+    <div data-in="1" style="display:flex;gap:16px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.12em;color:#8C8C8C">
+      <a href="mailto:andrianow817@gmail.com" style="color:#B5B5B5">ANDRIANOW817@GMAIL.COM</a>
+      <a href="https://www.instagram.com/katarsis_projects/" target="_blank" rel="noopener" style="color:#B5B5B5">INSTAGRAM</a>
+      <a href="https://www.tiktok.com/@rian_wjy1" target="_blank" rel="noopener" style="color:#B5B5B5">TIKTOK</a>
+      <span>© 2026</span>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:12px;min-width:0;padding:8px 0">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div role="group" aria-label="Explore services and products" style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ groups }}" as="g">
+          <button type="button" aria-pressed="{{ g.sel }}" onClick="{{ g.pick }}" style="display:flex;align-items:center;gap:8px;min-height:38px;padding:0 12px;border:1px solid {{ g.tabBd }};background:{{ g.tabBg }};color:{{ g.tabFg }};font-size:12px;font-weight:800;letter-spacing:0.08em;cursor:pointer;transition:background 150ms,color 150ms,border-color 150ms" style-hover="border-color:#8C8C8C">{{ g.label }}<span style="font-size:9px;font-weight:600;opacity:0.7">{{ g.type }}</span></button>
+        </sc-for>
+      </div>
+      <span style="font-size:12px;line-height:1.5;color:#8C8C8C">{{ groupDesc }}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div role="group" aria-label="Choose a category" style="display:flex;gap:4px;flex-wrap:wrap">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="4">
+          <button type="button" aria-pressed="{{ c.sel }}" onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:8px;min-height:38px;padding:0 12px;border:1px solid {{ c.tabBd }};background:{{ c.tabBg }};color:{{ c.tabFg }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 150ms,color 150ms,border-color 150ms" style-hover="border-color:#8C8C8C"><span style="width:8px;height:8px;background:{{ c.tone }}"></span>{{ c.name }}</button>
+        </sc-for>
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#6E6E6E">{{ selCode }} · EXAMPLES</span>
+    </div>
+    <div ref="{{ boardRef }}" role="group" aria-label="{{ groupLabel }} categories" style="position:relative;height:var(--board-h);min-height:476px;background:#131313;border:1px solid #232323;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;background-image:radial-gradient(#262626 1px,transparent 1px);background-size:24px 24px">
+      <div style="position:absolute;left:14px;right:14px;top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:0;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#6E6E6E;pointer-events:none">
+        <span>PICK TO PREVIEW · DRAG TO MOVE</span>
+      </div>
+      <button onClick="{{ tidy }}" style="position:absolute;right:10px;top:6px;z-index:900;height:28px;padding:0 10px;border:1px solid #2E2E2E;background:#161616;color:#B5B5B5;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;cursor:pointer;transition:color 150ms,border-color 150ms" style-hover="color:#F2F2F2;border-color:#555555">TIDY UP</button>
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="4">
+        <div data-tile="{{ c.i }}" onPointerDown="{{ c.down }}" onPointerMove="{{ c.hover }}" onPointerLeave="{{ c.leave }}" role="button" tabindex="0" aria-label="{{ c.aria }}" onKeyDown="{{ c.key }}" style="position:absolute;left:0;top:0;width:var(--tile-w);height:var(--tile-h);touch-action:none;cursor:grab;will-change:transform">
+          <div data-in2="1" style="width:100%;height:100%;padding:1px;background:{{ c.frame }};clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);transition:background 160ms;box-shadow:0 18px 40px rgba(0,0,0,0.45)">
+            <div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;background:#161616;clip-path:polygon(0 0,calc(100% - 15.5px) 0,100% 15.5px,100% 100%,0 100%)">
+              <div style="position:relative;flex:1;overflow:hidden;background:{{ c.tone }}">
+                <span style="position:absolute;left:10px;top:9px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:rgba(242,242,242,0.85)">{{ c.code }}</span>
+                <span style="position:absolute;left:-0.04em;bottom:-0.1em;font-family:'Anton',sans-serif;font-style:italic;font-size:var(--glyph);line-height:0.8;color:#F2F2F2;white-space:nowrap">{{ c.glyph }}</span>
+                <sc-if value="{{ c.sel }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:0;right:0;width:16px;height:16px;background:#E8FF00;clip-path:polygon(0 0,100% 0,100% 100%)"></span></sc-if>
+              </div>
+              <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:14.5px;font-weight:800;line-height:1.2">{{ c.name }}</span>
+                <span style="font-size:12px;color:#9A9A9A;line-height:1.35">{{ c.desc }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div ref="{{ prevRef }}" role="region" aria-label="{{ selCode }} example items" style="display:grid;grid-template-columns:var(--prev);gap:8px">
+      <sc-for list="{{ items }}" as="it" hint-placeholder-count="3">
+        <div data-pv="1" style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#161616;border:1px solid #262626;transition:border-color 150ms,transform 220ms cubic-bezier(.34,1.56,.64,1)" style-hover="border-color:#555555;transform:translateY(-2px)">
+          <span style="width:36px;height:36px;flex:none;background:{{ it.tone }};display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-style:italic;font-size:12px">{{ it.g }}</span>
+          <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.n }}</span><span style="font-size:11.5px;color:#9A9A9A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.d }}</span></span>
+          <span style="flex:none;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:0.12em;color:#0F0F0F;background:#F2F2F2;padding:3px 6px">{{ it.status }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;inertia&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Shelf&quot;}}">
+const GROUPS = [
+  { id: 'studio', label: 'THE STUDIO', type: 'SERVICES', desc: 'Apps and websites, UI/UX, design, and automation—built from first brief to finished handoff.', cats: [
+    { id: 'apps', name: 'Apps & Web', desc: 'Websites and apps built to solve real needs.', glyph: 'WEB', tone: 'oklch(0.42 0.1 258)', items: [['Websites', 'Responsive sites, ready to launch', 'WEB'], ['Web Apps', 'Useful tools made for your workflow', 'APP'], ['MVP Builds', 'A solid start for a new product', 'MVP']] },
+    { id: 'uiux', name: 'UI/UX', desc: 'Clear, thoughtful experiences from screen to screen.', glyph: 'UX', tone: 'oklch(0.44 0.08 205)', items: [['User Flows', 'Simple paths through your product', 'UX'], ['Interface Design', 'Polished screens for web and mobile', 'UI'], ['Prototypes', 'Clickable concepts, ready to share', 'PX']] },
+    { id: 'design', name: 'Design', desc: 'Distinctive visual systems and digital creative.', glyph: 'DES', tone: 'oklch(0.5 0.1 68)', items: [['Brand Identity', 'A consistent look for your brand', 'ID'], ['Visual Assets', 'Graphics made for your channels', 'ART'], ['Design Systems', 'Reusable styles and components', 'DS']] },
+    { id: 'automation', name: 'Automation', desc: 'Less repetitive work through smarter workflows.', glyph: 'AUTO', tone: 'oklch(0.4 0.11 300)', items: [['Workflow Setup', 'Connect the steps you repeat', 'FLOW'], ['Integrations', 'Make your tools work together', 'API'], ['Process Automation', 'Reliable routines that save time', 'AUTO']] }
+  ] },
+  { id: 'shelf', label: 'THE SHELF', type: 'PRODUCTS', desc: 'Finished templates, digital tools, design assets, and software—ready to use.', cats: [
+    { id: 'templates', name: 'Templates', desc: 'Ready-to-use templates for everyday work.', glyph: 'TPL', tone: 'oklch(0.42 0.1 258)', items: [['Finance OS', 'Notion · budget & savings', 'NTN'], ['CV ATS', 'Canva · 6 layouts', 'CV'], ['Feed Kit', 'Canva · 60 posts', 'IG']] },
+    { id: 'tools', name: 'Digital Tools', desc: 'Small finished tools for daily work.', glyph: 'TOOL', tone: 'oklch(0.44 0.08 205)', items: [['Invoice Maker', 'Web · PDF in a minute', 'INV'], ['Palette Lab', 'Web · colour palettes', 'HEX'], ['QR Studio', 'Web · branded QR codes', 'QR'] ] },
+    { id: 'assets', name: 'Design Assets', desc: 'Ready-made icons, presets, fonts, and mockups.', glyph: 'AST', tone: 'oklch(0.5 0.1 68)', items: [['Garis Icons', 'SVG · 500 line icons', 'SVG'], ['Senja', 'Lightroom · 20 presets', 'XMP'], ['Nusantara Grotesk', 'Font · 8 weights', 'Aa']] },
+    { id: 'software', name: 'Software', desc: 'Finished apps and plugins, ready to use.', glyph: 'SW', tone: 'oklch(0.4 0.11 300)', items: [['Kasir Lite', 'Web app · point of sale', 'POS'], ['Linkpage', 'Web app · link in bio', 'URL'], ['Rename', 'Figma plugin · tidy layers', 'FIG']] }
+  ] }
+];
+const SLOTS = [[0.06, 0.12, -6], [0.5, 0.08, 5], [0.14, 0.56, 4], [0.58, 0.52, -4]];
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+class Component extends DCLogic {
+  state = { group: 0, sel: 0, email: '', err: '', busy: false, done: false };
+  rootRef = React.createRef(); boardRef = React.createRef(); prevRef = React.createRef(); formRef = React.createRef(); markRef = React.createRef();
+  T = []; tiles = null; drag = null; z = 10; raf = 0;
+  componentDidMount() {
+    this.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    try { const sv = JSON.parse(localStorage.getItem('zl-waitlist') || 'null'); if (sv && sv.email) this.setState({ done: true, email: sv.email }); } catch (e) {}
+    this.layout(true);
+    this.onResize = () => this.layout(false);
+    window.addEventListener('resize', this.onResize);
+    this.onMoveW = e => this.pmove(e); this.onUpW = e => this.pup(e);
+    window.addEventListener('pointermove', this.onMoveW); window.addEventListener('pointerup', this.onUpW); window.addEventListener('pointercancel', this.onUpW);
+    this.onMouse = e => { const m = this.markRef.current; if (m && !this.rm) { const x = e.clientX / window.innerWidth - 0.5, y = e.clientY / window.innerHeight - 0.5; m.style.transform = 'perspective(300px) rotateY(' + (x * 30).toFixed(1) + 'deg) rotateX(' + (-y * 30).toFixed(1) + 'deg)'; } };
+    window.addEventListener('mousemove', this.onMouse, { passive: true });
+    const root = this.rootRef.current;
+    if (!this.rm) {
+      root.querySelectorAll('[data-in]').forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 80 + i * 70, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
+      root.querySelectorAll('[data-in2]').forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(-80px) rotate(' + (i % 2 ? 14 : -14) + 'deg) scale(.9)' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: 300 + i * 110, easing: 'cubic-bezier(.34,1.4,.64,1)', fill: 'backwards' }));
+    }
+    if (window.__zlRevealSite) window.__zlRevealSite();
+  }
+  frame = () => { this.raf = 0; if (this.step()) this.raf = requestAnimationFrame(this.frame); };
+  wake() { if (!this.raf) this.raf = requestAnimationFrame(this.frame); }
+  componentWillUnmount() {
+    if (this.raf) cancelAnimationFrame(this.raf);
+    window.removeEventListener('resize', this.onResize); window.removeEventListener('pointermove', this.onMoveW); window.removeEventListener('pointerup', this.onUpW); window.removeEventListener('pointercancel', this.onUpW); window.removeEventListener('mousemove', this.onMouse);
+  }
+  componentDidUpdate(pp, ps) {
+    if ((ps.sel !== this.state.sel || ps.group !== this.state.group) && !this.rm) this.prevRef.current.querySelectorAll('[data-pv]').forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(10px) scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 320, delay: i * 60, easing: 'cubic-bezier(.2,.9,.3,1.2)', fill: 'backwards' }));
+    if (!ps.done && this.state.done && !this.rm) { const d = this.rootRef.current.querySelector('[data-done]'); if (d) d.animate([{ opacity: 0, transform: 'scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: 360, easing: 'cubic-bezier(.34,1.56,.64,1)' }); }
+  }
+  els() { if (!this.tiles) { const b = this.boardRef.current; this.tiles = b ? [...b.querySelectorAll('[data-tile]')] : []; } return this.tiles; }
+  slot(i, W, H, w, h) {
+    const n = 4, gap = 14;
+    const one = W >= n * w + (n + 1) * gap && H < 2 * h + 3 * gap + 40;
+    const cols = one ? 4 : 2, rows = one ? 1 : 2;
+    const gx = (W - cols * w) / (cols + 1), gy = Math.max(gap, (H - 40 - rows * h) / (rows + 1));
+    const c = i % cols, r = Math.floor(i / cols);
+    const jx = [8, -6, -10, 6][i] * Math.min(1, gx / 40), jy = [-4, 6, 4, -6][i] * Math.min(1, gy / 30);
+    return [clamp(gx + c * (w + gx) + jx, 0, W - w), clamp(40 + gy + r * (h + gy) + jy, 36, H - h), SLOTS[i][2] * 0.6];
+  }
+  layout(init) {
+    const b = this.boardRef.current; if (!b) return;
+    const W = b.clientWidth, H = b.clientHeight;
+    this.els().forEach((el, i) => {
+      const w = el.offsetWidth, h = el.offsetHeight;
+      if (init || !this.T[i]) { const s = this.slot(i, W, H, w, h); this.T[i] = { x: s[0], y: s[1], r: s[2], r0: s[2], vx: 0, vy: 0, rx: 0, ry: 0, trx: 0, try_: 0, s: 1, ts: 1, w, h }; el.style.zIndex = String(10 + i); }
+      const t = this.T[i]; t.w = w; t.h = h; t.x = clamp(t.x, 0, Math.max(0, W - w)); t.y = clamp(t.y, 36, Math.max(36, H - h)); this.apply(el, t);
+    });
+  }
+  tidy() { const b = this.boardRef.current; if (!b) return; const W = b.clientWidth, H = b.clientHeight; this.T.forEach((t, i) => { const s = this.slot(i, W, H, t.w, t.h); t.tx = s[0]; t.ty = s[1]; t.r0 = s[2]; t.vx = 0; t.vy = 0; }); this.wake(); }
+  apply(el, t) { el.style.transform = 'translate3d(' + t.x.toFixed(1) + 'px,' + t.y.toFixed(1) + 'px,0) perspective(700px) rotateX(' + t.rx.toFixed(2) + 'deg) rotateY(' + t.ry.toFixed(2) + 'deg) rotate(' + t.r.toFixed(2) + 'deg) scale(' + t.s.toFixed(3) + ')'; }
+  step() {
+    const b = this.boardRef.current; if (!b) return;
+    const W = b.clientWidth, H = b.clientHeight, els = this.els(), inertia = this.props.inertia !== false && !this.rm;
+    let active = false;
+    els.forEach((el, i) => {
+      const t = this.T[i]; if (!t) return;
+      const dragging = this.drag && this.drag.i === i;
+      if (t.tx != null) { t.x += (t.tx - t.x) * 0.16; t.y += (t.ty - t.y) * 0.16; if (Math.abs(t.tx - t.x) < 0.5 && Math.abs(t.ty - t.y) < 0.5) { t.x = t.tx; t.y = t.ty; t.tx = null; } else active = true; }
+      else if (!dragging && inertia && (Math.abs(t.vx) > 0.05 || Math.abs(t.vy) > 0.05)) {
+        t.x += t.vx; t.y += t.vy; t.vx *= 0.93; t.vy *= 0.93;
+        if (t.x < 0) { t.x = 0; t.vx = -t.vx * 0.55; } if (t.x > W - t.w) { t.x = W - t.w; t.vx = -t.vx * 0.55; }
+        if (t.y < 36) { t.y = 36; t.vy = -t.vy * 0.55; } if (t.y > H - t.h) { t.y = H - t.h; t.vy = -t.vy * 0.55; }
+        active = true;
+        if (Math.abs(t.vx) <= 0.05 && Math.abs(t.vy) <= 0.05) t.vx = t.vy = 0;
+      }
+      const targetR = dragging ? t.r0 + clamp(this.drag.vx * 1.4, -16, 16) : t.r0 + clamp(t.vx * 0.9, -10, 10);
+      t.r += (targetR - t.r) * 0.18; if (Math.abs(targetR - t.r) > 0.05) active = true; else t.r = targetR;
+      t.rx += (t.trx - t.rx) * 0.15; t.ry += (t.try_ - t.ry) * 0.15;
+      if (Math.abs(t.trx - t.rx) > 0.05 || Math.abs(t.try_ - t.ry) > 0.05) active = true; else { t.rx = t.trx; t.ry = t.try_; }
+      t.ts = dragging ? 1.06 : (t.hover ? 1.03 : 1); t.s += (t.ts - t.s) * 0.2;
+      if (Math.abs(t.ts - t.s) > 0.001) active = true; else t.s = t.ts;
+      this.apply(el, t);
+    });
+    return active;
+  }
+  pdown(i, e) {
+    const el = this.els()[i], t = this.T[i]; if (!el || !t) return;
+    e.preventDefault();
+    const b = this.boardRef.current.getBoundingClientRect();
+    this.drag = { i, id: e.pointerId, ox: e.clientX - b.left - t.x, oy: e.clientY - b.top - t.y, sx: e.clientX, sy: e.clientY, lx: e.clientX, ly: e.clientY, vx: 0, vy: 0, moved: false, lt: performance.now() };
+    t.tx = null; t.vx = 0; t.vy = 0; t.trx = 0; t.try_ = 0;
+    el.style.zIndex = String(++this.z); el.style.cursor = 'grabbing';
+    this.wake();
+  }
+  pmove(e) {
+    const d = this.drag; if (!d || e.pointerId !== d.id) return;
+    const b = this.boardRef.current, br = b.getBoundingClientRect(), t = this.T[d.i];
+    if (Math.abs(e.clientX - d.sx) + Math.abs(e.clientY - d.sy) > 5) d.moved = true;
+    const now = performance.now(), dt = Math.max(8, now - d.lt);
+    d.vx = d.vx * 0.5 + ((e.clientX - d.lx) / dt * 16) * 0.5; d.vy = d.vy * 0.5 + ((e.clientY - d.ly) / dt * 16) * 0.5;
+    d.lx = e.clientX; d.ly = e.clientY; d.lt = now;
+    t.x = clamp(e.clientX - br.left - d.ox, 0, b.clientWidth - t.w); t.y = clamp(e.clientY - br.top - d.oy, 36, b.clientHeight - t.h);
+    this.wake();
+  }
+  pup(e) {
+    const d = this.drag; if (!d || e.pointerId !== d.id) return;
+    const t = this.T[d.i], el = this.els()[d.i];
+    if (el) el.style.cursor = 'grab';
+    if (!d.moved) this.select(d.i);
+    else { t.vx = clamp(d.vx, -40, 40); t.vy = clamp(d.vy, -40, 40); t.r0 = clamp(t.r0 + d.vx * 0.3, -10, 10); }
+    this.drag = null;
+    this.wake();
+  }
+  select(i) { if (i !== this.state.sel) this.setState({ sel: i }); const t = this.T[i]; if (t && !this.rm) { t.s = 0.94; } this.wake(); }
+  switchGroup(i) { if (i !== this.state.group) this.setState({ group: i, sel: 0 }); }
+  renderVals() {
+    const s = this.state, group = GROUPS[s.group], CATS = group.cats, sel = CATS[s.sel];
+    return {
+      rootRef: this.rootRef, boardRef: this.boardRef, prevRef: this.prevRef, formRef: this.formRef, markRef: this.markRef,
+      groups: GROUPS.map((g, i) => ({ label: g.label, type: g.type, sel: i === s.group, tabBd: i === s.group ? '#E8FF00' : '#2E2E2E', tabBg: i === s.group ? '#E8FF00' : 'transparent', tabFg: i === s.group ? '#0F0F0F' : '#C4C4C4', pick: () => this.switchGroup(i) })),
+      groupLabel: group.label, groupDesc: group.desc,
+      cats: CATS.map((c, i) => ({
+        i: String(i), name: c.name, desc: c.desc, glyph: c.glyph, tone: c.tone, code: (s.group === 0 ? 'ST' : 'SH') + '/0' + (i + 1) + ' · ' + (s.group === 0 ? 'SERVICE' : 'PRODUCT'), sel: i === s.sel, aria: 'Preview ' + c.name + (s.group === 0 ? ' services' : ' products'), frame: i === s.sel ? '#E8FF00' : '#2E2E2E',
+        tabBd: i === s.sel ? '#E8FF00' : '#2E2E2E', tabBg: i === s.sel ? '#E8FF00' : 'transparent', tabFg: i === s.sel ? '#0F0F0F' : '#C4C4C4',
+        down: e => this.pdown(i, e), pick: () => this.select(i),
+        key: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.select(i); } },
+        hover: e => { if (this.drag || this.rm || e.pointerType !== 'mouse') return; const t = this.T[i]; if (!t) return; const r = e.currentTarget.getBoundingClientRect(); t.try_ = ((e.clientX - r.left) / r.width - 0.5) * 18; t.trx = -((e.clientY - r.top) / r.height - 0.5) * 18; t.hover = true; this.wake(); },
+        leave: () => { const t = this.T[i]; if (t) { t.trx = 0; t.try_ = 0; t.hover = false; this.wake(); } }
+      })),
+      selCode: (s.group === 0 ? 'ST' : 'SH') + '/0' + (s.sel + 1) + ' ' + sel.name.toUpperCase(),
+      items: sel.items.map(it => ({ n: it[0], d: it[1], g: it[2], tone: sel.tone, status: s.group === 0 ? 'SERVICE' : 'READY' })),
+      tidy: () => this.tidy(),
+      notDone: !s.done, done: s.done, email: s.email, onEmail: e => this.setState({ email: e.target.value, err: '' }),
+      inputBd: s.err ? '#FF5A4E' : '#2E2E2E', hasErr: !!s.err, noErr: !s.err, err: s.err, busy: s.busy, btnOp: s.busy ? '0.7' : '1', btnLabel: s.busy ? 'Sending…' : 'Get notified',
+      submit: e => {
+        e.preventDefault(); if (s.busy) return;
+        const v = s.email.trim(), err = !v ? 'Enter your email first.' : !EMAIL.test(v) ? 'That email doesn’t look right. Try you@email.com' : '';
+        if (err) { this.setState({ err }); const f = this.formRef.current; if (f && !this.rm) f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(7px)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(0)' }], { duration: 320, easing: 'ease-out' }); return; }
+        this.setState({ busy: true });
+        setTimeout(() => { try { localStorage.setItem('zl-waitlist', JSON.stringify({ email: v })); } catch (e2) {} this.setState({ busy: false, done: true, email: v }); }, 550);
+      },
+      reset: () => { try { localStorage.removeItem('zl-waitlist'); } catch (e) {} this.setState({ done: false, email: '', err: '' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
