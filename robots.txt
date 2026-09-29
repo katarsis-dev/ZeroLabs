@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://zerolabs.katarsis.workers.dev/sitemap.xml
